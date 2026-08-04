@@ -17,6 +17,10 @@ class MyApp extends StatelessWidget {
   }
 }
 
+// Switch lebih rapi daripada banyak if karena hanya memeriksa
+// satu variabel, yaitu kategori. Kode menjadi lebih mudah dibaca
+// dan lebih mudah ditambah jika ada kategori baru.
+
 class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key});
 
