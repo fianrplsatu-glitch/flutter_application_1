@@ -88,6 +88,41 @@ class MyHomePage extends StatelessWidget {
     print("Harga Akhir : Rp$hargaAkhir");
     print("Kategori : $rak");
 
+// ==========================
+// DAFTAR BARANG
+// ==========================
+List<String> daftarBarang = [
+  "Buku Tulis",
+  "Pulpen",
+  "Penghapus",
+  "Roti",
+];
+
+List<int> daftarHarga = [
+  3000,
+  2500,
+  1500,
+  5000,
+];
+
+print("=== DAFTAR BARANG ===");
+
+for (int i = 0; i < daftarBarang.length; i++) {
+  print("${i + 1}. ${daftarBarang[i]} - Rp. ${daftarHarga[i]}");
+}
+
+// ==========================
+// PENJUALAN BUKU TULIS
+// ==========================
+int stok = 3;
+
+print("--- Penjualan Buku Tulis ---");
+
+while (stok > 0) {
+  stok--;
+  print("Terjual 1, sisa stok: $stok");
+}
+
      return Scaffold(
       appBar: AppBar(
         title: const Text("Koperasi Sekolah"),
@@ -132,3 +167,9 @@ class MyHomePage extends StatelessWidget {
 // Menggunakan switch lebih rapi daripada banyak if karena
 // hanya memeriksa satu variabel (kategori), sehingga kode
 // lebih mudah dibaca dan mudah ditambah jika ada kategori baru.
+
+//"Bahaya apa yang muncul bila kondisi berhenti pada while keliru, dan bagaimana cara untuk memastikan koperasi tidak menjual melebihi stok?"
+// Bahaya jika kondisi berhenti pada while keliru adalah perulangan dapat
+// terus berjalan atau stok menjadi minus sehingga koperasi menjual barang
+// melebihi jumlah yang tersedia. Untuk mencegahnya, gunakan kondisi
+// while (stok > 0) agar penjualan berhenti tepat saat stok mencapai 0.
