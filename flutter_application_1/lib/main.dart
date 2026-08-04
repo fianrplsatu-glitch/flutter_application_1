@@ -17,49 +17,55 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// Switch lebih rapi daripada banyak if karena hanya memeriksa
-// satu variabel, yaitu kategori. Kode menjadi lebih mudah dibaca
-// dan lebih mudah ditambah jika ada kategori baru.
-
 class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Data barang
+    // ==========================
+    // DATA BARANG
+    // ==========================
     String namaBarang = "Buku Tulis";
-    String kategori = "atk";
-    double hargaAnggota = 3000.0;
-    double hargaUmum = 3500.0;
+    String kategori = "makanan";
 
-    // Data pembelian
+    double hargaAnggota = 3000;
+    double hargaUmum = 3500;
+
+    // ==========================
+    // UBAH NILAI INI UNTUK UJI
+    // ==========================
     bool anggota = true;
-    int jumlah = 70;
+    double totalBelanja = 250000;
 
     // Menentukan harga
+    String jenisHarga;
     double harga;
+
     if (anggota) {
       harga = hargaAnggota;
+      jenisHarga = "Anggota";
     } else {
       harga = hargaUmum;
+      jenisHarga = "Umum";
     }
 
-    // Menghitung total
-    double total = harga * jumlah;
+    // Menentukan potongan
+    double persenPotongan = 0;
 
-    // Potongan
-    double potongan = 0;
-
-    if (total > 200000) {
-      potongan = total * 0.10;
-    } else if (total > 100000) {
-      potongan = total * 0.05;
+    if (totalBelanja > 200000) {
+      persenPotongan = 10;
+    } else if (totalBelanja > 100000) {
+      persenPotongan = 5;
+    } else {
+      persenPotongan = 0;
     }
 
-    double hargaAkhir = total - potongan;
+    double potongan = totalBelanja * persenPotongan / 100;
+    double hargaAkhir = totalBelanja - potongan;
 
     // Menentukan rak
     String rak;
+
     switch (kategori) {
       case "atk":
         rak = "Rak 1";
@@ -74,9 +80,18 @@ class MyHomePage extends StatelessWidget {
         rak = "Rak lain";
     }
 
-    return Scaffold(
+    // Output ke Debug Console
+    print("=== TRANSAKSI KOPERASI ===");
+    print("Harga : $jenisHarga");
+    print("Total : Rp$totalBelanja");
+    print("Potongan : $persenPotongan%");
+    print("Harga Akhir : Rp$hargaAkhir");
+    print("Kategori : $rak");
+
+     return Scaffold(
       appBar: AppBar(
-        title: const Text("Transaksi Koperasi"),
+        title: const Text("Koperasi Sekolah"),
+        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -85,21 +100,35 @@ class MyHomePage extends StatelessWidget {
           children: [
             const Text(
               "=== TRANSAKSI KOPERASI ===",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            const SizedBox(height: 15),
+            const SizedBox(height: 20),
+
             Text("Nama Barang : $namaBarang"),
             Text("Kategori : $kategori"),
             Text("Lokasi Rak : $rak"),
-            Text("Status Anggota : $anggota"),
-            Text("Harga Satuan : Rp${harga.toStringAsFixed(1)}"),
-            Text("Jumlah : $jumlah"),
-            Text("Total : Rp${total.toStringAsFixed(1)}"),
-            Text("Potongan : Rp${potongan.toStringAsFixed(1)}"),
-            Text("Harga Akhir : Rp${hargaAkhir.toStringAsFixed(1)}"),
+            Text("Status Anggota : ${anggota ? "Ya" : "Tidak"}"),
+            Text("Harga Satuan : Rp${harga.toStringAsFixed(0)}"),
+            Text("Total Belanja : Rp${totalBelanja.toStringAsFixed(0)}"),
+            Text("Potongan : ${persenPotongan.toStringAsFixed(0)}%"),
+            Text(
+              "Harga Akhir : Rp${hargaAkhir.toStringAsFixed(0)}",
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.green,
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 }
+
+// Menggunakan switch lebih rapi daripada banyak if karena
+// hanya memeriksa satu variabel (kategori), sehingga kode
+// lebih mudah dibaca dan mudah ditambah jika ada kategori baru.
