@@ -9,6 +9,11 @@ double hitungTotal(int jumlah, double harga) {
   return jumlah * harga;
 }
 
+// Fungsi menghitung harga akhir setelah potongan
+double hitungHargaAkhir(double total, double persenPotongan) {
+  return total - (total * persenPotongan / 100);
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -40,8 +45,7 @@ class MyHomePage extends StatelessWidget {
     // DATA TRANSAKSI
     // ==========================
     bool anggota = true;
-    int jumlah = 3;
-    double totalBelanja = 250000;
+    int jumlah = 70;
 
     // Menentukan harga
     String jenisHarga;
@@ -55,24 +59,28 @@ class MyHomePage extends StatelessWidget {
       jenisHarga = "Umum";
     }
 
-    // Menggunakan fungsi
+    // Menggunakan fungsi hitungTotal()
+    // Ini adalah SATU-SATUNYA sumber "total belanja" dalam transaksi ini,
+    // supaya potongan & harga akhir selalu konsisten dengan total riil.
     double total = hitungTotal(jumlah, harga);
 
-    // Potongan
-    double persenPotongan = 0;
+    // Menentukan potongan borongan berdasarkan hasil hitungTotal()
+    double persenPotongan;
 
-    if (totalBelanja > 200000) {
+    if (total > 200000) {
       persenPotongan = 10;
-    } else if (totalBelanja > 100000) {
+    } else if (total > 100000) {
       persenPotongan = 5;
     } else {
       persenPotongan = 0;
     }
 
-    double potongan = totalBelanja * persenPotongan / 100;
-    double hargaAkhir = totalBelanja - potongan;
+    // Menggunakan fungsi hitungHargaAkhir() dengan total yang sama
+    double hargaAkhir = hitungHargaAkhir(total, persenPotongan);
 
-    // Switch kategori
+    double potongan = total - hargaAkhir;
+
+    // Menentukan rak
     String rak;
 
     switch (kategori) {
@@ -95,7 +103,7 @@ class MyHomePage extends StatelessWidget {
 
     print("=== TRANSAKSI KOPERASI ===");
     print("Harga : $jenisHarga");
-    print("Total Belanja : Rp$totalBelanja");
+    print("Total Belanja : Rp$total");
     print("Potongan : $persenPotongan%");
     print("Harga Akhir : Rp$hargaAkhir");
     print("Kategori : $rak");
@@ -105,6 +113,12 @@ class MyHomePage extends StatelessWidget {
     print("Jumlah : $jumlah");
     print("Harga : Rp$harga");
     print("Total : Rp$total");
+
+    print("");
+    print("=== PERHITUNGAN HARGA AKHIR ===");
+    print("Total Belanja : Rp$total");
+    print("Potongan : Rp$potongan");
+    print("Harga Akhir : Rp$hargaAkhir");
 
     // ==========================
     // LIST + FOR
@@ -170,7 +184,6 @@ class MyHomePage extends StatelessWidget {
             Text("Harga Satuan : Rp${harga.toStringAsFixed(0)}"),
             Text("Jumlah : $jumlah"),
             Text("Total : Rp${total.toStringAsFixed(0)}"),
-            Text("Total Belanja : Rp${totalBelanja.toStringAsFixed(0)}"),
             Text("Potongan : ${persenPotongan.toStringAsFixed(0)}%"),
             Text(
               "Harga Akhir : Rp${hargaAkhir.toStringAsFixed(0)}",
@@ -191,7 +204,11 @@ class MyHomePage extends StatelessWidget {
 // hanya memeriksa satu variabel (kategori),
 // sehingga kode lebih mudah dibaca dan ditambah jika ada kategori baru.
 
-
 // Bahaya jika kondisi while keliru adalah perulangan bisa terus berjalan
 // atau stok menjadi minus. Gunakan kondisi while (stok > 0)
 // agar penjualan berhenti tepat saat stok habis.
+
+//Pemecahan program menjadi fungsi membuat kode lebih mudah dirawat dan diubah.
+//Jika aturan potongan koperasi berubah di kemudian hari, 
+//kita hanya perlu mengubah logika perhitungan pada fungsi hitungHargaAkhir() 
+//atau bagian yang menentukan persenPotongan, tanpa mengubah bagian lain dari program.
