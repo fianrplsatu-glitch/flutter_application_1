@@ -14,6 +14,30 @@ double hitungHargaAkhir(double total, double persenPotongan) {
   return total - (total * persenPotongan / 100);
 }
 
+// ======================================
+// CLASS BARANG
+// ======================================
+class Barang {
+  String nama;
+  double harga;
+  int stok;
+  String kategori;
+
+  // Konstruktor
+  Barang(this.nama, this.harga, this.stok, this.kategori);
+
+
+  // Method menampilkan kartu barang
+  void tampilkan() {
+    print("=== KARTU BARANG ===");
+    print("Nama : $nama");
+    print("Harga : Rp$harga");
+    print("Stok : $stok");
+    print("Kategori : $kategori");
+    print("=====================");
+  }
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -35,10 +59,17 @@ class MyHomePage extends StatelessWidget {
     // ==========================
     // DATA BARANG
     // ==========================
-    String namaBarang = "Buku Tulis";
-    String kategori = "makanan";
-
-    double hargaAnggota = 3000;
+    Barang bukuTulis = Barang("Buku Tulis", 3000, 20, "atk");
+    Barang pulpen = Barang("Pulpen", 2500, 30, "atk" );
+    Barang roti = Barang("Roti", 5000, 15, "makanan");
+    
+    // Menampilkan kartu setiap barang
+    bukuTulis.tampilkan();
+    pulpen.tampilkan();
+    roti.tampilkan();
+    
+    String namaBarang = bukuTulis.nama;
+    double hargaAnggota = bukuTulis.harga;
     double hargaUmum = 3500;
 
     // ==========================
@@ -49,15 +80,15 @@ class MyHomePage extends StatelessWidget {
 
     // Menentukan harga
     String jenisHarga;
-    double harga;
+double harga;
 
-    if (anggota) {
-      harga = hargaAnggota;
-      jenisHarga = "Anggota";
-    } else {
-      harga = hargaUmum;
-      jenisHarga = "Umum";
-    }
+if (anggota) {
+  harga = hargaAnggota;
+  jenisHarga = "Anggota";
+  } else {
+  harga = hargaUmum;
+  jenisHarga = "Umum";
+}
 
     // Menggunakan fungsi hitungTotal()
     // Ini adalah SATU-SATUNYA sumber "total belanja" dalam transaksi ini,
@@ -79,8 +110,11 @@ class MyHomePage extends StatelessWidget {
     double hargaAkhir = hitungHargaAkhir(total, persenPotongan);
 
     double potongan = total - hargaAkhir;
-
+    // =====================
     // Menentukan rak
+    // =====================
+
+    String kategori = bukuTulis.kategori;
     String rak;
 
     switch (kategori) {
@@ -121,14 +155,14 @@ class MyHomePage extends StatelessWidget {
     print("Harga Akhir : Rp$hargaAkhir");
 
     // ==========================
-    // LIST + FOR
+    // DAFTAR OBJEK BARANG
     // ==========================
 
-    List<String> daftarBarang = [
-      "Buku Tulis",
-      "Pulpen",
-      "Penghapus",
-      "Roti",
+      List<Barang> daftarBarang = [
+      Barang("Buku Tulis", 3000, 20, "atk"),
+      Barang("Pulpen", 2500, 30, "atk"),
+      Barang("Penghapus", 1500, 25, "atk"),
+      Barang("Roti", 5000, 15, "makanan"),
     ];
 
     List<int> daftarHarga = [
@@ -137,14 +171,18 @@ class MyHomePage extends StatelessWidget {
       1500,
       5000,
     ];
-
+    // Menampilkan seluruh barang menggunakan perulangan
     print("");
     print("=== DAFTAR BARANG ===");
 
     for (int i = 0; i < daftarBarang.length; i++) {
-      print("${i + 1}. ${daftarBarang[i]} - Rp. ${daftarHarga[i]}");
-    }
-
+    print(
+    "${i + 1}. ${daftarBarang[i].nama} "
+    "- Rp${daftarBarang[i].harga} "
+    "- Stok: ${daftarBarang[i].stok} "
+    "- Kategori: ${daftarBarang[i].kategori}",
+  );
+}
     // ==========================
     // WHILE
     // ==========================
@@ -212,3 +250,22 @@ class MyHomePage extends StatelessWidget {
 //Jika aturan potongan koperasi berubah di kemudian hari, 
 //kita hanya perlu mengubah logika perhitungan pada fungsi hitungHargaAkhir() 
 //atau bagian yang menentukan persenPotongan, tanpa mengubah bagian lain dari program.
+
+// Memindahkan keputusan ke fungsi mengurangi risiko salah karena
+// aturan penentuan harga hanya ditulis di satu tempat. Jika aturan
+// berubah, cukup mengubah fungsi hitungHarga() tanpa mencari dan
+// mengubah kode di banyak bagian program.
+
+// PERBANDINGAN DENGAN SPRINT 3:
+// Pada Sprint 3, data barang di simpan dalam variabel/ list yang terpisah,
+// sehingga nama, harga, dan stok lebih sulit dikelola.
+// Sekarang dengan class Barang, nama, harga, stok, dan kategori
+// berada dalam satu objek. Semua objek juga dapat disimpan dalam
+// satu List<Barang> dan ditampilkan dengan perulangan.
+
+//LKPD-5 OOP
+// Keuntungan memodelkan barang sebagai objek adalah data seperti nama,
+// harga, stok, dan kategori menjadi satu kesatuan sehingga kode lebih rapi.
+// Jika sistem koperasi berkembang, barang lebih mudah ditambah, diubah,
+// dan dikembangkan dengan method baru tanpa membuat banyak variabel terpisah.
+// Dengan begitu, program lebih mudah dirawat dan mengurangi risiko kesalahan.
