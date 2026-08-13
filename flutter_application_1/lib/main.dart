@@ -14,19 +14,34 @@ double hitungHargaAkhir(double total, double persenPotongan) {
   return total - (total * persenPotongan / 100);
 }
 
+// Fungsi memproses pemeblian
+
+
+
 // ======================================
 // CLASS BARANG
 // ======================================
 class Barang {
   String nama;
   double harga;
-  int stok;
+  int _stok;
   String kategori;
 
   // Konstruktor
-  Barang(this.nama, this.harga, this.stok, this.kategori);
+  Barang(this.nama, this.harga, this._stok, this.kategori);
 
-
+  // Getter untuk membaca stok
+  int get stok => _stok;
+  
+  // Method penjualan 
+  bool jual(int n) {
+    if (n > 0 && n <= _stok) {
+      _stok -= n;
+      return true;
+    }
+    return false;
+  }
+  
   // Method menampilkan kartu barang
   void tampilkan() {
     print("=== KARTU BARANG ===");
@@ -35,6 +50,44 @@ class Barang {
     print("Stok : $stok");
     print("Kategori : $kategori");
     print("=====================");
+  }
+}
+
+void prosesBeli(String inputJumlah, Barang barang) {
+  try {
+    int jumlah = int.parse(inputJumlah);
+
+    if (barang.jual(jumlah)) {
+      print("Penjualan berhasil.");
+      print("Jumlah terjual: $jumlah");
+      print("Sisa stok: ${barang.stok}");
+    } else {
+      print("Penjualan gagal. Jumlah melebihi stok atau tidak valid.");
+    }
+  } on FormatException {
+    print("Input jumlah tidak valid. Silakan masukkan angka dan ulangi.");
+  } finally {
+    print("Transaksi dicatat di log");
+  }
+}
+
+// =============================
+// CLASS BARANG PROMO
+// =============================
+class BarangPromo extends Barang {
+  double diskon;
+
+  BarangPromo(
+    String nama,
+    double harga,
+    int stok, 
+    String kategori,
+    this.diskon,
+  ) : super(nama, harga, stok, kategori);
+
+  // Method khusus untuk menghitung harga promo
+  double hargaPromo() {
+    return harga - (harga * diskon / 100);
   }
 }
 
@@ -63,6 +116,25 @@ class MyHomePage extends StatelessWidget {
     Barang pulpen = Barang("Pulpen", 2500, 30, "atk" );
     Barang roti = Barang("Roti", 5000, 15, "makanan");
     
+  BarangPromo promo = BarangPromo(
+    "Buku Promo",
+    10000,
+    10,
+    "atk",
+    20,
+  );
+
+  bukuTulis.tampilkan();
+  pulpen.tampilkan();
+  roti.tampilkan();
+
+  print("=== BARANG PROMO ===");
+  print("Nama : ${promo.nama}");
+  print("Harga Normal : Rp${promo.harga}");
+  print("Diskon : ${promo.diskon}%");
+  print("Harga Promo : Rp${promo.hargaPromo()}");
+  print("====================");
+
     // Menampilkan kartu setiap barang
     bukuTulis.tampilkan();
     pulpen.tampilkan();
@@ -192,11 +264,17 @@ if (anggota) {
     print("");
     print("--- Penjualan Buku Tulis ---");
 
-    while (stok > 0) {
-      stok--;
-      print("Terjual 1, sisa stok: $stok");
+    prosesBeli("3", bukuTulis);
+    bool berhasil = bukuTulis.jual(3);
+    
+    if (berhasil){
+      print("Penjualan berhasil.");
+      print("Jumlah terjual: 3");
+      print("Sisa stok: ${bukuTulis.stok}");
+    } else {
+      print("Penjulan gagal, stok tidak mencukup.");
     }
-
+    
     return Scaffold(
       appBar: AppBar(
         title: const Text("Koperasi Sekolah"),
@@ -223,8 +301,7 @@ if (anggota) {
             Text("Jumlah : $jumlah"),
             Text("Total : Rp${total.toStringAsFixed(0)}"),
             Text("Potongan : ${persenPotongan.toStringAsFixed(0)}%"),
-            Text(
-              "Harga Akhir : Rp${hargaAkhir.toStringAsFixed(0)}",
+            Text("Harga Akhir : Rp${hargaAkhir.toStringAsFixed(0)}",
               style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -269,3 +346,13 @@ if (anggota) {
 // Jika sistem koperasi berkembang, barang lebih mudah ditambah, diubah,
 // dan dikembangkan dengan method baru tanpa membuat banyak variabel terpisah.
 // Dengan begitu, program lebih mudah dirawat dan mengurangi risiko kesalahan.
+
+// Melindungi _stok penting bagi integritas data koperasi
+// agar stok tidak dapat di ubah sembarangan dari laur class. 
+// Perubahan stok hanya dilakukan memlaui method jual()
+// yang memastikan jumlah penjualan tidak elebihi stok.
+
+// Saat menguji prosesBeli("2"), program berjalan normal.
+// Saat menguji prosesBeli("dua"), terjadi kesalahan input
+// Tetapi kesalahan ditangani sehingga program tidak berhenti
+// Dan tetap dapat melanjutkan proses.
